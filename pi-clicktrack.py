@@ -20,6 +20,14 @@ RESPONSE_PORT = 53001
 # - time taken before further keys are activated (debounce time)
 DEBOUNCE_TIME = 0.5
 
+# Key actions
+#                Key code,   Descr,  LCD col, OSC command,          Get track name true/false
+key_actions = ( (LCD.SELECT, 'Stop', (1,1,1), "/stop", False),
+                (LCD.RIGHT,  'Play', (0,1,0), "/cue/selected/start",True),
+                (LCD.LEFT,   'Pause',(0,1,1), "/cue/selected/pause",True),
+                (LCD.UP,     'Fwd',  (1,1,1), "/select/next",       True),
+                (LCD.DOWN,   'Prev', (1,1,1), "/select/previous",   True) )
+
 def send_osc(msg):
   client = udp_client.SimpleUDPClient(SERVER_IP, SERVER_PORT)
   client.send_message(msg, [])
@@ -70,25 +78,13 @@ if __name__ == "__main__":
   start_server()
   print('Waiting for key press')
   while True:
-    if lcd.is_pressed(LCD.RIGHT):
-      # 'Go' button is pressed
-      lcd.clear()
-      set_message("Playing")
-      lcd.set_color(0.0, 1.0, 0.0)
-      send_osc("/cue/selected/start")
-      get_cuename()
-      time.sleep(DEBOUNCE_TIME)
-    if lcd.is_pressed(LCD.LEFT):
-      # 'Stop' button is pressed
-      lcd.clear()
-      set_message("Paused")
-      lcd.set_color(1.0, 0.0, 0.0)
-      send_osc("/cue/selected/pause")
-      get_cuename()
-      time.sleep(DEBOUNCE_TIME)
-    if lcd.is_pressed(LCD.SELECT):
-      lcd.set_color(1.0, 1.0, 1.0)
-      lcd.clear()
-      set_message("Press play")
-      send_osc("/cue/selected/stop")
-      time.sleep(DEBOUNCE_TIME)
+    for action in key_actions:
+      if lcd.is_pressed(action[0]):
+        lcd.clear()
+        set_message(action[1])
+        lcd.set_color(action[2][0], action[2][1], action [2][2])
+        send_osc(action[3])
+        if action[4]:
+          get_cuename()
+        time.sleep(DEBOUNCE_TIME)
+
