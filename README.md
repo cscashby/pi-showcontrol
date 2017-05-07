@@ -6,6 +6,10 @@ The primary and first application for it will be a 'Go box' with a small display
 big-ass<sup>1</sup> Red and Green buttons for Stop and Go, a few other buttons
 and a footswitch port (when you need to kick something for Go).
 
+It looks something like this:
+
+![Box Design image](https://github.com/cscashby/pi-showcontrol/raw/6427e44d50968b0135206b570e9a3a4cb71eeb63/docs/box/Box%20Design.png)
+
 It will spit out [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control) or MIDI commands
 and display useful stuff on the small display.
 
