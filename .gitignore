@@ -2,6 +2,9 @@
 *.~???
 *.~????
 
+# VI temp files
+*.swp
+
 # Apple temp files
 .DS_Store
 

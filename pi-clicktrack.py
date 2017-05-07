@@ -3,6 +3,7 @@
 import time
 import signal
 import sys
+import os
 import threading
 import json
 import Adafruit_CharLCD as LCD
@@ -10,6 +11,8 @@ from pythonosc import osc_message_builder
 from pythonosc import udp_client
 from pythonosc import dispatcher
 from pythonosc import osc_server
+
+JSON_FILENAME="config.json"
 
 # TODO: Externalise these
 SERVER_IP = "192.168.5.106"
@@ -28,9 +31,16 @@ key_actions = ( (LCD.SELECT, 'Stop', (1,1,1), "/stop", False),
                 (LCD.UP,     'Fwd',  (1,1,1), "/select/next",       True),
                 (LCD.DOWN,   'Prev', (1,1,1), "/select/previous",   True) )
 
+global keyThreads
+keyThreads = []
+
 def send_osc(msg):
-  client = udp_client.SimpleUDPClient(SERVER_IP, SERVER_PORT)
-  client.send_message(msg, [])
+  for server, m in msg.items():
+    ip = config['oscServers'][server]['ip']
+    port = config['oscServers'][server]['port']
+    responsePort = config['oscServers'][server]['responsePort']
+  client = udp_client.SimpleUDPClient(ip, port)
+  client.send_message(m, [])
 
 def display_handler(unused_addr, args):
   try:
@@ -53,38 +63,61 @@ def start_server():
   server_thread = threading.Thread(target=server.serve_forever)
   server_thread.start()
 
+def start_keyThread(function):
+  global threads_running
+  threads_running = True
+  key_thread = threading.Thread(target=function)
+  keyThreads.append(key_thread)
+  key_thread.daemon = True
+  key_thread.start()
+
 def setup():
+  # Configure signal handler for a clean exit
   def signal_handler(signal, frame):
-    print("Stopping server")
     server.shutdown()
-    exit(0)
+    global threads_running
+    threads_running = False
+    for t in keyThreads:
+      t.join(1000)
+    os._exit(0)
   signal.signal(signal.SIGINT, signal_handler)
 
+  # Configure LCD display
   global lcd
   lcd = LCD.Adafruit_CharLCDPlate()
-
   lcd.set_color(1.0, 1.0, 1.0)
   lcd.clear()
   set_message("Press play")
+
+  # Read JSON settings
+  global config
+  with open(JSON_FILENAME, encoding="utf-8") as config_file:
+    config = json.load(config_file)
 
 def set_message(text):
   global lcd_text
   lcd_text = text
   lcd.message(text)
 
+def key_charLCD():
+  print('Waiting for key press')
+  while threads_running:
+    for action in config['keyActions']['charLCD']:
+      if lcd.is_pressed(action['keyCode']):
+        lcd.clear()
+        set_message(action['lcdMessage'])
+        c = action['lcdColor']
+        lcd.set_color(c[0], c[1], c[2])
+        for oscAction in action['OSC']:
+          send_osc(oscAction)
+        for otherAction in action['Actions']:
+          # TODO: Do stuff here
+          print(otherAction)
+        time.sleep(config['settings']['debounceTime'])
+
 if __name__ == "__main__":
   setup()
   print("Starting OSC UDP server on port 53001")
   start_server()
-  print('Waiting for key press')
-  while True:
-    for action in key_actions:
-      if lcd.is_pressed(action[0]):
-        lcd.clear()
-        set_message(action[1])
-        lcd.set_color(action[2][0], action[2][1], action [2][2])
-        send_osc(action[3])
-        if action[4]:
-          get_cuename()
-        time.sleep(DEBOUNCE_TIME)
+  start_keyThread(key_charLCD)
 

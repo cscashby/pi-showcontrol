@@ -1,0 +1,77 @@
+{
+  "settings": {
+    "#debounceTime": "Time before other switch can be used",
+    "debounceTime": 0.2
+  },
+  "oscServers": {
+    "mac": {
+      "ip": "192.168.5.106",
+      "port": 53000,
+      "responsePort": 53001
+    }
+  },
+  "keyActions": {
+    "charLCD": [
+      {
+        "keyCode": 0,
+        "description": "Stop",
+        "lcdMessage": "Stop",
+        "lcdColor": [ 1,1,1 ],
+        "OSC": [
+          {"mac": "/stop"}
+        ],
+        "Actions": [
+          "qLabDisplayNext"
+        ]
+      },
+      {
+        "keyCode": 1,
+        "description": "Play",
+        "lcdMessage": "Play",
+        "lcdColor": [ 0,1,0 ],
+        "OSC": [
+          {"mac": "/go"}
+        ],
+        "Actions": [
+          "qLabDisplayCurrentNext"
+        ]
+      },
+      {
+        "keyCode": 2,
+        "description": "Prev",
+        "lcdMessage": "Prev",
+        "lcdColor": [ 1,1,1 ],
+        "OSC": [
+          {"mac": "/playhead/previous"}
+        ],
+        "Actions": [
+          "qLabDisplayCurrentNext"
+        ]
+      },
+      {
+        "keyCode": 3,
+        "description": "Fwd",
+        "lcdMessage": "Fwd",
+        "lcdColor": [ 1,1,1 ],
+        "OSC": [
+          {"mac": "/playhead/next"}
+        ],
+        "Actions": [
+          "qLabDisplayCurrentNext"
+        ]
+      },
+      {
+        "keyCode": 4,
+        "description": "Pause",
+        "lcdMessage": "Pause",
+        "lcdColor": [ 0,1,1 ],
+        "OSC": [
+          {"mac": "/pause"}
+        ],
+        "Actions": [
+          "qLabDisplayCurrentNext"
+        ]
+      }
+    ]
+  }
+}
