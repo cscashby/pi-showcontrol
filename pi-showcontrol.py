@@ -42,9 +42,10 @@ def get_cuename():
 def start_server(port):
   d = dispatcher.Dispatcher()
   # We start the server on each port that's required, but don't apply the map until we need it
-
-  global server
+  global servers
+  servers = {}
   server = osc_server.ThreadingOSCUDPServer((LISTEN_IP, port), d)
+  servers[port] = server 
   print("Serving on {}".format(server.server_address))
   server_thread = threading.Thread(target=server.serve_forever)
   server_thread.start()
@@ -62,7 +63,8 @@ def setup():
   def signal_handler(signal, frame):
     lcd.clear()
     lcd.set_color(0.0,0.0,0.0)
-    server.shutdown()
+    for port, server in servers.items():
+      server.shutdown()
     global threads_running
     threads_running = False
     for t in keyThreads:
