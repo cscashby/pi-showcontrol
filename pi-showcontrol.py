@@ -60,6 +60,8 @@ def start_keyThread(function):
 def setup():
   # Configure signal handler for a clean exit
   def signal_handler(signal, frame):
+    lcd.clear()
+    lcd.set_color(0.0,0.0,0.0)
     server.shutdown()
     global threads_running
     threads_running = False
