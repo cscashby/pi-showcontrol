@@ -7,6 +7,7 @@ import os
 import threading
 import json
 import Adafruit_CharLCD as LCD
+import imp
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
 from pythonosc import dispatcher
@@ -83,6 +84,18 @@ def setup():
   global config
   with open(JSON_FILENAME, encoding="utf-8") as config_file:
     config = json.load(config_file)
+
+  # Import modules required for OSC responses
+  # First import base module
+  f, filename, description = imp.find_module("modules")
+  module = imp.load_module("modules", f, filename, description)
+  for imp_mod in config['importModules']:
+    try:
+      f, filename, description = imp.find_module(imp_mod, [filename])
+      module = imp.load_module(imp_mod, f, filename, description)
+      print("Successfully loaded {} from {}".format(imp_mod, filename))
+    except ImportError as err:
+      print("Could not import: {} error {}".format(imp_mod, err))
 
 def set_message(text):
   global lcd_text
