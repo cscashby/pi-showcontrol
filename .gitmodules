@@ -4,4 +4,4 @@
 
 [submodule "libs/ansible-pi"]
 	path = libs/ansible-pi
-	url = git@github.com:cscashby/ansible-pi.git
+	url = https://github.com/cscashby/ansible-pi.git
