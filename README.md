@@ -18,6 +18,8 @@ It is configurable for different functions, the currently supported / tested and
 * ... more to come!
 
 ## Prerequisites
+For Ansible (on the server):
+* pip install passlib
 NOTE: Most, if not all of these should be handled by ansible playbook now.
 * python-osc `sudo pip install python-osc`
 * GPIO support for RPi `sudo pup install RPi.GPIO`

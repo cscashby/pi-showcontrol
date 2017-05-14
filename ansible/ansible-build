@@ -1,2 +1,10 @@
 #!/bin/bash
-ansible-playbook ansible/playbook.yml -i conf/hosts --ask-pass --become
+if (( $# == 0 )); then
+	echo "This will do a dry-run, use -y to action"
+	ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbook.yml -i hosts --ask-pass --become --check
+else
+	if [[ $1 -eq "-y" ]]; then
+	  ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook playbook.yml -i hosts --ask-pass --become
+	fi
+fi
+

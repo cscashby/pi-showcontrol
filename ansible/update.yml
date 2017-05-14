@@ -1,0 +1,9 @@
+---
+
+- name: Ansible Playbook for Pi devices used for show control - update only (i.e. gobutton role)
+  hosts: gobuttons
+  roles:
+    - gobutton
+  remote_user: pi
+  become: yes
+

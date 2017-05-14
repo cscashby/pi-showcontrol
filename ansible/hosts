@@ -1,2 +1,6 @@
 [gobuttons]
-192.168.5.108
+pi-gobutton1.lan ansible_host=192.168.5.108
+
+[gobuttons:vars]
+ansible_python_interpreter=/usr/bin/python3
+

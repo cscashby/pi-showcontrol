@@ -1,0 +1,38 @@
+---
+- set_fact:
+    real_ansible_host: "{{ ansible_host }}"
+
+- name: 'Install git'
+  apt: name={{ item}} state=present update_cache=yes
+  with_items:
+    - git
+
+- name: 'Install OSC for Python'
+  pip:
+    name: python-osc
+  become: yes
+    
+- name: 'Install RPi.GPIO for Python'
+  pip:
+    name: RPi.GPIO
+  become: yes
+
+- name: 'Download gobutton software'
+  become: no
+  git:
+    repo: 'https://github.com/cscashby/pi-showcontrol.git'
+    dest: /home/pi/pi-showcontrol
+    depth: 1
+    accept_hostkey: yes
+    force: yes
+
+- name: 'Install Adafruit LCD software'
+  become: yes
+  shell: "python3 setup.py install"
+  args:
+    chdir: "/home/pi/pi-showcontrol/libs/Adafruit_Python_CharLCD"
+
+- name: 'Enable i2c - NOTE this may not work depending on future of raspi-config'
+  become: yes
+  shell: "raspi-config nonint do_i2c 0"
+

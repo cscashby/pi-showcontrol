@@ -1,0 +1,10 @@
+---
+- set_fact:
+    real_ansible_host: "{{ ansible_host }}"
+
+- name: 'Install 16x2 screen support'
+  apt: name={{ item}} state=present update_cache=yes
+  with_items:
+    - python-smbus
+    - i2c-tools
+

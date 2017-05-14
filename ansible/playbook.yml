@@ -1,9 +1,19 @@
 ---
 
 - name: Ansible Playbook for Pi devices used for show control
-
   hosts: gobuttons
   roles:
     - pi
+    - python
+    - lcd16x2
+    - gobutton
   remote_user: pi
   become: yes
+  vars_prompt:
+  - name: "user_password"
+    prompt: "Please enter pi user password"
+    private: yes 
+    encrypt: "sha512_crypt"
+    confirm: yes 
+    salt_size: 7
+
