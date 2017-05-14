@@ -2,3 +2,6 @@
 	path = libs/attwad_python-osc
 	url = https://github.com/attwad/python-osc.git
 
+[submodule "libs/ansible-pi"]
+	path = libs/ansible-pi
+	url = git@github.com:cscashby/ansible-pi.git
