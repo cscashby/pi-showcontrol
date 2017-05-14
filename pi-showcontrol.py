@@ -21,6 +21,9 @@ LISTEN_IP="0.0.0.0"
 global keyThreads
 keyThreads = []
 
+global importedModules
+importedModules = {}
+
 def send_osc(msg):
   for server, m in msg.items():
     ip = config['oscServers'][server]['ip']
@@ -28,14 +31,6 @@ def send_osc(msg):
     responsePort = config['oscServers'][server]['responsePort']
   client = udp_client.SimpleUDPClient(ip, port)
   client.send_message(m, [])
-
-def display_handler(unused_addr, args):
-  try:
-    j = json.loads(args)
-    displayName = j['data']
-    lcd.clear()
-    lcd.message(lcd_text + "\n{name:.16}".format(name=displayName))
-  except ValueError: pass
 
 def get_cuename():
   send_osc("/cue/selected/displayName")
@@ -93,6 +88,7 @@ def setup():
     try:
       f, filename, description = imp.find_module(imp_mod, [filename])
       module = imp.load_module(imp_mod, f, filename, description)
+      importedModules[imp_mod] = module
       print("Successfully loaded {} from {}".format(imp_mod, filename))
     except ImportError as err:
       print("Could not import: {} error {}".format(imp_mod, err))
@@ -114,8 +110,10 @@ def key_charLCD():
         for oscAction in action['OSC']:
           send_osc(oscAction)
         for otherAction in action['Actions']:
-          # TODO: Do stuff here
-          print(otherAction)
+          # TODO: Error check or make more generic - action has to be format: module.function at present 
+          a = otherAction.split(".")
+          func = getattr(importedModules[a[0]], a[1])
+          func()
         time.sleep(config['settings']['debounceTime'])
 
 if __name__ == "__main__":
