@@ -5,6 +5,9 @@
 # VI temp files
 *.swp
 
+# Testing files to ignore
+test.qlab4
+
 # Apple temp files
 .DS_Store
 
