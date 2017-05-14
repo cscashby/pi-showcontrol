@@ -7,6 +7,7 @@ import os
 import threading
 import json
 import Adafruit_CharLCD as LCD
+import imp
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
 from pythonosc import dispatcher
@@ -14,22 +15,8 @@ from pythonosc import osc_server
 
 JSON_FILENAME="config.json"
 
-# TODO: Externalise these
-SERVER_IP = "192.168.5.106"
-SERVER_PORT = 53000
-# TODO: Dynamic allocation of IP(s) to listen on
-MY_IP = "192.168.5.108"
-RESPONSE_PORT = 53001
-# - time taken before further keys are activated (debounce time)
-DEBOUNCE_TIME = 0.5
-
-# Key actions
-#                Key code,   Descr,  LCD col, OSC command,          Get track name true/false
-key_actions = ( (LCD.SELECT, 'Stop', (1,1,1), "/stop", False),
-                (LCD.RIGHT,  'Play', (0,1,0), "/cue/selected/start",True),
-                (LCD.LEFT,   'Pause',(0,1,1), "/cue/selected/pause",True),
-                (LCD.UP,     'Fwd',  (1,1,1), "/select/next",       True),
-                (LCD.DOWN,   'Prev', (1,1,1), "/select/previous",   True) )
+# IP address for OSC response server
+LISTEN_IP="0.0.0.0"
 
 global keyThreads
 keyThreads = []
@@ -53,12 +40,13 @@ def display_handler(unused_addr, args):
 def get_cuename():
   send_osc("/cue/selected/displayName")
 
-def start_server():
+def start_server(port):
   d = dispatcher.Dispatcher()
-  d.map("/reply/cue_id/*/displayName", display_handler)
-
-  global server
-  server = osc_server.ThreadingOSCUDPServer((MY_IP, RESPONSE_PORT), d)
+  # We start the server on each port that's required, but don't apply the map until we need it
+  global servers
+  servers = {}
+  server = osc_server.ThreadingOSCUDPServer((LISTEN_IP, port), d)
+  servers[port] = server 
   print("Serving on {}".format(server.server_address))
   server_thread = threading.Thread(target=server.serve_forever)
   server_thread.start()
@@ -74,7 +62,10 @@ def start_keyThread(function):
 def setup():
   # Configure signal handler for a clean exit
   def signal_handler(signal, frame):
-    server.shutdown()
+    lcd.clear()
+    lcd.set_color(0.0,0.0,0.0)
+    for port, server in servers.items():
+      server.shutdown()
     global threads_running
     threads_running = False
     for t in keyThreads:
@@ -93,6 +84,18 @@ def setup():
   global config
   with open(JSON_FILENAME, encoding="utf-8") as config_file:
     config = json.load(config_file)
+
+  # Import modules required for OSC responses
+  # First import base module
+  f, filename, description = imp.find_module("modules")
+  module = imp.load_module("modules", f, filename, description)
+  for imp_mod in config['importModules']:
+    try:
+      f, filename, description = imp.find_module(imp_mod, [filename])
+      module = imp.load_module(imp_mod, f, filename, description)
+      print("Successfully loaded {} from {}".format(imp_mod, filename))
+    except ImportError as err:
+      print("Could not import: {} error {}".format(imp_mod, err))
 
 def set_message(text):
   global lcd_text
@@ -117,7 +120,9 @@ def key_charLCD():
 
 if __name__ == "__main__":
   setup()
-  print("Starting OSC UDP server on port 53001")
-  start_server()
+  for server,settings in config['oscServers'].items():
+    port = settings['responsePort']
+    print("Starting OSC UDP server on port {}".format(port))
+    start_server(port)
   start_keyThread(key_charLCD)
 

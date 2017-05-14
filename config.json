@@ -10,6 +10,9 @@
       "responsePort": 53001
     }
   },
+  "importModules": [
+    "qlab"
+  ],
   "keyActions": {
     "charLCD": [
       {
