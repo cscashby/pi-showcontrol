@@ -4,6 +4,7 @@
 
 # VI temp files
 *.swp
+*.swo
 
 # Testing files to ignore
 test.qlab4

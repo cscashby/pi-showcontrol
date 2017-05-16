@@ -28,20 +28,23 @@ def send_osc(msg):
   for server, m in msg.items():
     ip = config['oscServers'][server]['ip']
     port = config['oscServers'][server]['port']
-    responsePort = config['oscServers'][server]['responsePort']
   client = udp_client.SimpleUDPClient(ip, port)
   client.send_message(m, [])
 
 def get_cuename():
   send_osc("/cue/selected/displayName")
 
-def start_server(port):
+def start_server(serverName):
+  listenIP = config['oscServers'][server]['ip']
+  listenPort = config['oscServers'][server]['responsePort']
   d = dispatcher.Dispatcher()
-  # We start the server on each port that's required, but don't apply the map until we need it
+  for string, fn in config['oscServers'][server]['responseCallback'].items():
+    function = getattr(importedModules[fn.['module'], fn.['function']]
+    d.map(string, function)
   global servers
   servers = {}
-  server = osc_server.ThreadingOSCUDPServer((LISTEN_IP, port), d)
-  servers[port] = server 
+  server = osc_server.ThreadingOSCUDPServer((listenIP, listenPort), d)
+  servers[serverName] = server 
   print("Serving on {}".format(server.server_address))
   server_thread = threading.Thread(target=server.serve_forever)
   server_thread.start()

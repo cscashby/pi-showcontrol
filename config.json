@@ -7,7 +7,15 @@
     "mac": {
       "ip": "192.168.5.106",
       "port": 53000,
-      "responsePort": 53001
+      "responsePort": 53001,
+      "responseCallback": [
+        {
+          "/reply/cue_id/*/displayName": {
+            "module": "qlab",
+            "function": "qLabCallback"
+          }
+        }
+      ]
     }
   },
   "importModules": [
