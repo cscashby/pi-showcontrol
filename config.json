@@ -1,21 +1,18 @@
 {
   "settings": {
     "#debounceTime": "Time before other switch can be used",
-    "debounceTime": 0.2
+    "debounceTime": 0.2,
+    "#listenIP": "IP to listen on for OSC responses",
+    "listenIP": "0.0.0.0"
   },
   "oscServers": {
     "mac": {
       "ip": "192.168.5.106",
       "port": 53000,
       "responsePort": 53001,
-      "responseCallback": [
-        {
-          "/reply/cue_id/*/displayName": {
-            "module": "qlab",
-            "function": "qLabCallback"
-          }
-        }
-      ]
+      "responseCallback": {
+        "/reply/cue_id/*/displayName": "qlab.display_handler"
+      }
     }
   },
   "importModules": [

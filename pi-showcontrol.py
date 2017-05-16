@@ -15,9 +15,6 @@ from pythonosc import osc_server
 
 JSON_FILENAME="config.json"
 
-# IP address for OSC response server
-LISTEN_IP="0.0.0.0"
-
 global keyThreads
 keyThreads = []
 
@@ -35,17 +32,16 @@ def get_cuename():
   send_osc("/cue/selected/displayName")
 
 def start_server(serverName):
-  listenIP = config['oscServers'][server]['ip']
-  listenPort = config['oscServers'][server]['responsePort']
+  listenIP = config['settings']['listenIP']
+  listenPort = config['oscServers'][serverName]['responsePort']
   d = dispatcher.Dispatcher()
-  for string, fn in config['oscServers'][server]['responseCallback'].items():
-    function = getattr(importedModules[fn.['module'], fn.['function']]
-    d.map(string, function)
+  for string, fn in config['oscServers'][serverName]['responseCallback'].items():
+    d.map(string, get_function(fn))
   global servers
   servers = {}
+  print("Starting server on {}, port {}".format(listenIP, listenPort))
   server = osc_server.ThreadingOSCUDPServer((listenIP, listenPort), d)
   servers[serverName] = server 
-  print("Serving on {}".format(server.server_address))
   server_thread = threading.Thread(target=server.serve_forever)
   server_thread.start()
 
@@ -113,17 +109,18 @@ def key_charLCD():
         for oscAction in action['OSC']:
           send_osc(oscAction)
         for otherAction in action['Actions']:
-          # TODO: Error check or make more generic - action has to be format: module.function at present 
-          a = otherAction.split(".")
-          func = getattr(importedModules[a[0]], a[1])
-          func()
+          get_function(otherAction)()
         time.sleep(config['settings']['debounceTime'])
+
+def get_function(fn):
+  # TODO: Error check or make more generic - action has to be format: module.function at present 
+  a = fn.split(".")
+  return getattr(importedModules[a[0]], a[1])
 
 if __name__ == "__main__":
   setup()
-  for server,settings in config['oscServers'].items():
-    port = settings['responsePort']
-    print("Starting OSC UDP server on port {}".format(port))
-    start_server(port)
+  for serverName in config['oscServers']:
+    print("Starting OSC UDP server: {}".format(serverName))
+    start_server(serverName)
   start_keyThread(key_charLCD)
 
