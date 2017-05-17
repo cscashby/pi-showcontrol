@@ -28,9 +28,9 @@
         "OSC": [
           {"mac": "/stop"}
         ],
-        "Actions": [
-          "qlab.displayNext"
-        ]
+        "Actions": {
+          "qlab.displayCurrent": [ "mac" ]
+        }
       },
       {
         "keyCode": 1,
@@ -40,9 +40,9 @@
         "OSC": [
           {"mac": "/go"}
         ],
-        "Actions": [
-          "qlab.displayCurrentNext"
-        ]
+        "Actions": {
+          "qlab.displayCurrent": [ "mac" ]
+        }
       },
       {
         "keyCode": 2,
@@ -52,9 +52,9 @@
         "OSC": [
           {"mac": "/playhead/previous"}
         ],
-        "Actions": [
-          "qlab.displayCurrentNext"
-        ]
+        "Actions": {
+          "qlab.displayCurrent": [ "mac" ]
+        }
       },
       {
         "keyCode": 3,
@@ -64,9 +64,9 @@
         "OSC": [
           {"mac": "/playhead/next"}
         ],
-        "Actions": [
-          "qlab.displayCurrentNext"
-        ]
+        "Actions": {
+          "qlab.displayCurrent": [ "mac" ]
+        }
       },
       {
         "keyCode": 4,
@@ -76,9 +76,9 @@
         "OSC": [
           {"mac": "/pause"}
         ],
-        "Actions": [
-          "qlab.displayCurrentNext"
-        ]
+        "Actions": {
+          "qlab.displayCurrent": [ "mac" ]
+        }
       }
     ]
   }
