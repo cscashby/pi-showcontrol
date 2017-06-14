@@ -1,6 +1,7 @@
 {
-  "inputClasses": {
+  "inputs": {
     "qlab": {
+      "className": "qlab",
       "settings": {
         "#listenIP": "IP to listen on for OSC responses",
         "listenIP": "0.0.0.0",
@@ -8,6 +9,7 @@
       }
     },
     "GPIObuttons": {
+      "className": "GPIObuttons",
       "settings": {
         "#debounceTime": "Time before other switch can be used",
         "debounceTime": 0.05,
@@ -15,51 +17,59 @@
       }
     }
   },
-  "outputClasses": {
-    "qlab": {
+  "outputs": {
+    "qlab1": {
+      "className": "qlab",
       "settings": {
         "ip": "192.168.5.106",
+        "port": 53000
+      }
+    },
+    "qlab2": {
+      "className": "qlab",
+      "settings": {
+        "ip": "192.168.5.108",
         "port": 53000
       }
     }
   },
   "actions": [
     {
-      "inputClass": "qlab",
+      "inputName": "qlab",
       "oscExpr": "/reply/cue_id/*/displayName",
       "output": {
         "comment": "displayStuff"
       }
     },
     {
-      "inputClass": "GPIObuttons",
+      "inputName": "GPIObuttons",
       "GPIO": "18",
       "description": "Go",
       "output": {
-        "outputClass": "qlab",
+        "outputName": "qlab1",
         "message": "/go"
       }
     },
     {
-      "inputClass": "GPIObuttons",
+      "inputName": "GPIObuttons",
       "GPIO": "27",
       "description": "Stop",
       "output": {
-        "outputClass": "qlab",
+        "outputName": "qlab1",
         "message": "/stop"
       }
     },
     {
-      "inputClass": "GPIObuttons",
+      "inputName": "GPIObuttons",
       "GPIO": "22",
       "description": "Pause",
       "output": {
-        "outputClass": "qlab",
+        "outputName": "qlab1",
         "message": "/pause"
       }
     },
     {
-      "inputClass": "GPIObuttons",
+      "inputName": "GPIObuttons",
       "GPIO": "23",
       "description": "Go",
       "output": {
