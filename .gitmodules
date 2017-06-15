@@ -8,3 +8,9 @@
 [submodule "libs/Adafruit_Python_CharLCD"]
 	path = libs/Adafruit_Python_CharLCD
 	url = https://github.com/adafruit/Adafruit_Python_CharLCD.git
+[submodule "libs/sn3218"]
+	path = libs/sn3218
+	url = https://github.com/pimoroni/sn3218.git
+[submodule "libs/python-osc"]
+	path = libs/python-osc
+	url = https://github.com/attwad/python-osc.git
