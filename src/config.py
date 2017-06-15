@@ -4,7 +4,7 @@ import json
 
 global __config
 
-JSON_FILENAME="../config.json"
+JSON_FILENAME="config.json"
 
 # read in config from file
 with open(JSON_FILENAME, encoding="utf-8") as config_file:
