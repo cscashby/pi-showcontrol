@@ -1,3 +1,6 @@
+# Apple temp files
+.AppleDouble
+
 # MS Office temp files
 *.~???
 *.~????

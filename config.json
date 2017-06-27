@@ -11,9 +11,10 @@
     "GPIObuttons": {
       "className": "GPIObuttons",
       "settings": {
-        "#debounceTime": "Time before other switch can be used",
-        "debounceTime": 0.05,
-        "#todo": "Should we think about a seperate repeatTime setting"
+        "#debounceTime": "Time to wait for change of state",
+        "debounceTime": 0.2,
+        "#repeatTime": "Time before other switch can be used",
+        "repeatTime": 0.05
       }
     }
   },
@@ -43,7 +44,7 @@
     },
     {
       "inputName": "GPIObuttons",
-      "GPIO": "18",
+      "GPIO": 18,
       "description": "Go",
       "output": {
         "outputName": "qlab1",
@@ -52,16 +53,16 @@
     },
     {
       "inputName": "GPIObuttons",
-      "GPIO": "27",
-      "description": "Stop",
+      "GPIO": 27,
+      "description": "Panic",
       "output": {
         "outputName": "qlab1",
-        "message": "/stop"
+        "message": "/panic"
       }
     },
     {
       "inputName": "GPIObuttons",
-      "GPIO": "22",
+      "GPIO": 22,
       "description": "Pause",
       "output": {
         "outputName": "qlab1",
@@ -70,7 +71,7 @@
     },
     {
       "inputName": "GPIObuttons",
-      "GPIO": "23",
+      "GPIO": 23,
       "description": "Go",
       "output": {
         "comment": "poweroff"

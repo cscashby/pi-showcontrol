@@ -6,4 +6,7 @@
 <path>/${PROJECT_DIR_NAME}/old_src</path>
 <path>/${PROJECT_DIR_NAME}/src</path>
 </pydev_pathproperty>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>/Volumes/Home Directory/dev/pi-showcontrol/libs/python-osc</path>
+</pydev_pathproperty>
 </pydev_project>
