@@ -1,4 +1,5 @@
 #!/bin/sh
 
-python3 src/showcontrol.py
+python3 -u src/showcontrol.py > out.txt
+
 

@@ -1,8 +1,10 @@
 import threading
 import time
+import logging
 
 class _Module(threading.Thread):
   def __init__(self, parent, name):
+    self.logger = logging.getLogger('root')
     threading.Thread.__init__(self)
     self.parent = parent
     self.daemon = False
@@ -12,15 +14,15 @@ class _Module(threading.Thread):
     self.name = name
   
   def run(self):
-    print("Starting thread")
+    self.logger.debug("Starting thread {}".format(self.name))
     while self.running:
       time.sleep(0.0001)
-    print("Got exit signal")
+    self.logger.debug("Thread {} got exit signal".format(self.name))
     
   def handleEvent(self):
-    print("Handle event")
+    self.logger.debug("{} handling event".format(self.name))
     pass
       
   def stop(self):
       self.running = False
-      print("Stopping")
+      self.logger.debug("{} stopping".format(self.name))

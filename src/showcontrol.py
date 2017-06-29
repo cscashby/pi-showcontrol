@@ -3,11 +3,14 @@ import signal
 import sys
 import imp
 import time
+import logging
+import log
 from config import config
 from modules._Module import _Module
 
 class showcontrol():
   def __init__(self):
+    self.logger = logging.getLogger('root')
     self.__importedModules = {}
     self.__inputThreads = {}
     self.__outputThreads = {}
@@ -24,10 +27,10 @@ class showcontrol():
         f, filename, description = imp.find_module(name, [filename])
         module = imp.load_module(name, f, filename, description)
         self.__importedModules["{}.{}".format(t, name)] = module
-        print("Successfully loaded {} module {} from {}".format(t, name, filename))
+        self.logger.debug("Successfully loaded {} module {} from {}".format(t, name, filename))
         return module
       except ImportError as err:
-        print("Could not import {} module {} error {}".format(t, name, err))
+        self.logger.debug("Could not import {} module {} error {}".format(t, name, err))
         return False
   
   def runThreads(self):
@@ -78,12 +81,16 @@ def signal_handler(signal, frame):
   sys.exit(0)
       
 if __name__ == "__main__":
-    # Ensure we exit cleanly
-    signal.signal(signal.SIGINT, signal_handler)
-    # Finally, we can instantiate the classes. This will kick off threads
-    global mainObject
-    mainObject = showcontrol()
-    mainObject.runThreads()
-    # Then wait for the world to end
-    while True:
-      time.sleep(120)
+  # Set up logging
+  logger = log.setup_custom_logger('root')
+  logger.debug('main message')
+
+  # Ensure we exit cleanly
+  signal.signal(signal.SIGINT, signal_handler)
+  # Finally, we can instantiate the classes. This will kick off threads
+  global mainObject
+  mainObject = showcontrol()
+  mainObject.runThreads()
+  # Then wait for the world to end
+  while True:
+    time.sleep(120)
