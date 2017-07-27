@@ -1,6 +1,6 @@
 import time
 import logging
-import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO #@UnresolvedImport
 from modules.input._InputModule import _InputModule
 
 class GPIObuttons(_InputModule):
