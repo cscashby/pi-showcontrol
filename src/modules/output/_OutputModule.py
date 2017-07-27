@@ -4,7 +4,6 @@ import logging
 
 class _OutputModule(_Module):
   def __init__(self, parent, name):
-    self.logger = logging.getLogger('root')
     _Module.__init__(self, parent, name)
     self.myConfig = {
       "settings":  config()["outputs"][self.name]["settings"]

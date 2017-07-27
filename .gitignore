@@ -1,3 +1,6 @@
+show.log
+show.log.*
+
 # Apple temp files
 .AppleDouble
 

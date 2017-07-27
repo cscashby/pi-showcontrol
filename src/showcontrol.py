@@ -10,7 +10,7 @@ from modules._Module import _Module
 
 class showcontrol():
   def __init__(self):
-    self.logger = logging.getLogger('root')
+    self.logger = logging.getLogger()
     self.__importedModules = {}
     self.__inputThreads = {}
     self.__outputThreads = {}
@@ -53,7 +53,7 @@ class showcontrol():
         class_ = getattr(module, d["className"])
         instance = class_(self, name)
         if  isinstance(instance, _Module):
-          print("Loading {} as {}".format(d["className"], name))
+          self.logger.debug("Loading {} as {}".format(d["className"], name))
           self.__outputThreads[name] = instance
         else:
           assert False, "Output module {} not an instance of _Module".format(name)
@@ -82,9 +82,8 @@ def signal_handler(signal, frame):
       
 if __name__ == "__main__":
   # Set up logging
-  logger = log.setup_custom_logger('root')
-  logger.debug('main message')
-
+  logger = log.setup_custom_logger('root', config()["logging"])
+  
   # Ensure we exit cleanly
   signal.signal(signal.SIGINT, signal_handler)
   # Finally, we can instantiate the classes. This will kick off threads

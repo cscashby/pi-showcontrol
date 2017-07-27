@@ -5,7 +5,7 @@ from modules.input._InputModule import _InputModule
 
 class GPIObuttons(_InputModule):
   def __init__(self, parent, name):
-    self.logger = logging.getLogger('root')
+    self.logger = logging.getLogger()
     _InputModule.__init__(self, parent, name)
     GPIO.setmode(GPIO.BCM)
     for action in self.myConfig["actions"]:

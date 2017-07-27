@@ -4,7 +4,7 @@ import logging
 
 class OSC(_OutputModule):
   def __init__(self, parent, name):
-    self.logger = logging.getLogger('root')
+    self.logger = logging.getLogger()
     _OutputModule.__init__(self, parent, name)
     
   def setServer(self, ip, port):
@@ -12,7 +12,7 @@ class OSC(_OutputModule):
     self.port = port
   
   def performAction(self, OSCstring):
-    sendOSC(self, OSCstring)
+    self.sendOSC(self, OSCstring)
   
   def sendOSC(self, OSCstring):
     client = udp_client.SimpleUDPClient(self.ip, self.port)
