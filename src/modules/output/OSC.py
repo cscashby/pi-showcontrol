@@ -4,8 +4,8 @@ import logging
 
 class OSC(_OutputModule):
   def __init__(self, parent, name):
-    self.logger = logging.getLogger()
     _OutputModule.__init__(self, parent, name)
+    self.logger = logging.getLogger()
     
   def setServer(self, ip, port):
     self.ip = ip

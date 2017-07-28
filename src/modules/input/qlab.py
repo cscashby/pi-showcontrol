@@ -1,4 +1,7 @@
 from modules.input._InputModule import _InputModule
+import logging
 
 class qlab(_InputModule):
-  pass
+  def __init__(self, parent, name):
+    _InputModule.__init__(self, parent, name)
+    self.logger = logging.getLogger()

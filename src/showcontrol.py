@@ -36,7 +36,6 @@ class showcontrol():
   def runThreads(self):
     for name, d in config()["inputs"].items():
       module = self.importModule("input", d["className"])
-      assert module, "Input could not be loaded, not running thread {}".format(d["className"])
       if module:
         class_ = getattr(module, d["className"])
         instance = class_(self, name)
@@ -45,10 +44,10 @@ class showcontrol():
         else:
           assert False, "Input module {} not an instance of _Module".format(name)
           exit(1)
-        instance.start()
+      else:
+        self.logger.warn("Input could not be loaded, not running thread {}".format(d["className"]))
     for name, d in config()["outputs"].items():
       module = self.importModule("output", d["className"])
-      assert module, "Output could not be loaded, not running thread {}".format(d["className"])
       if module:
         class_ = getattr(module, d["className"])
         instance = class_(self, name)
@@ -58,7 +57,13 @@ class showcontrol():
         else:
           assert False, "Output module {} not an instance of _Module".format(name)
           exit(1)
-        instance.start()  
+      else:
+        self.logger.warn("Input could not be loaded, not running thread {}".format(d["className"]))
+    # We start all the threads after we have completed initialisation as they will depend on each other
+    for instance in self.__inputThreads.values():
+      instance.start()
+    for instance in self.__outputThreads.values():
+      instance.start()
         
   def outputThreads(self):
     return self.__outputThreads

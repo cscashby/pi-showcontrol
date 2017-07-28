@@ -16,6 +16,15 @@
         "#repeatTime": "Time before other switch can be used",
         "repeatTime": 0.05
       }
+    },
+    "screenKeepAliveTimer": {
+      "className": "timer",
+      "settings": {
+        "#timer": "Time in seconds between each action trigger",
+        "timer": 30,
+        "#runOnStart": "If True, runs when class initialises, otherwise just runs after first timer",
+        "runOnStart": true
+      }
     }
   },
   "outputs": {
@@ -32,6 +41,9 @@
         "ip": "192.168.5.108",
         "port": 53000
       }
+    },
+    "unblankScreen": {
+      "className": "unblankScreen"
     },
     "screen": {
       "className": "cursesOutput",
@@ -107,9 +119,16 @@
     {
       "inputName": "GPIObuttons",
       "GPIO": 23,
-      "description": "Go",
+      "description": "Power",
       "output": {
-        "comment": "poweroff"
+        "comment": "power"
+      }
+    },
+    {
+      "inputName": "screenKeepAliveTimer",
+      "description": "Timer which keeps the screen alive",
+      "output": {
+        "outputName": "unblankScreen"
       }
     }
   ],

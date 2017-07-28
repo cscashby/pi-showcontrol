@@ -4,8 +4,8 @@ import logging
 
 class _Module(threading.Thread):
   def __init__(self, parent, name):
-    self.logger = logging.getLogger()
     threading.Thread.__init__(self)
+    self.logger = logging.getLogger()
     self.parent = parent
     self.daemon = False
     self.event = threading.Event()
