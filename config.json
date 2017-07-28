@@ -28,17 +28,10 @@
     }
   },
   "outputs": {
-    "qlab1": {
+    "qlab-macmini": {
       "className": "qlab",
       "settings": {
-        "ip": "192.168.5.106",
-        "port": 53000
-      }
-    },
-    "qlab2": {
-      "className": "qlab",
-      "settings": {
-        "ip": "192.168.5.108",
+        "ip": "192.168.5.104",
         "port": 53000
       }
     },
@@ -46,7 +39,7 @@
       "className": "unblankScreen"
     },
     "screen": {
-      "className": "cursesOutput",
+      "className": "#cursesOutput",
       "settings": {
         "#width,height": "8x22 with Terminus 28x14",
         "areas": {
@@ -86,7 +79,8 @@
       "inputName": "qlab",
       "oscExpr": "/reply/cue_id/*/displayName",
       "output": {
-        "comment": "displayStuff"
+        "outputName": "screen",
+        "comment": "blah"
       }
     },
     {
@@ -94,7 +88,7 @@
       "GPIO": 18,
       "description": "Go",
       "output": {
-        "outputName": "qlab1",
+        "outputName": "qlab-macmini",
         "message": "/go"
       }
     },
@@ -103,7 +97,7 @@
       "GPIO": 27,
       "description": "Panic",
       "output": {
-        "outputName": "qlab1",
+        "outputName": "qlab-macmini",
         "message": "/panic"
       }
     },
@@ -112,7 +106,7 @@
       "GPIO": 22,
       "description": "Pause",
       "output": {
-        "outputName": "qlab1",
+        "outputName": "qlab-macmini",
         "message": "/pause"
       }
     },

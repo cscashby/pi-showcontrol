@@ -12,12 +12,14 @@ class timer(_InputModule):
     
     while self.running:
       if not self.myConfig["settings"]["runOnStart"]:
+        # TODO need to sleep short time and wait for time change
         time.sleep(self.myConfig["settings"]["timer"])
       for action in self.myConfig["actions"]:
         if "outputName" in action["output"].keys():
           self.parent.outputThreads()[action["output"]['outputName']].performAction()
         else:
           self.logger.warn("Action has no output: {}".format(action))
+      # TODO need to sleep short time and wait for time change
       time.sleep(self.myConfig["settings"]["timer"])
     
     self.logger.debug("Timer exiting")

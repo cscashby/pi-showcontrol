@@ -40,3 +40,7 @@ class cursesOutput(_OutputModule):
       stdscr.getkey()
 
     curses.endwin()
+
+  def performAction(self, **kwargs):
+    self.logger.debug("performAction called with args {}".format(kwargs))
+  
