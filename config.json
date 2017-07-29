@@ -25,6 +25,15 @@
         "#runOnStart": "If True, runs when class initialises, otherwise just runs after first timer",
         "runOnStart": true
       }
+    },
+    "qlabKeepAliveTimer": {
+      "className": "timer",
+      "settings": {
+        "#timer": "Time in seconds between each action trigger",
+        "timer": 30,
+        "#runOnStart": "If True, runs when class initialises, otherwise just runs after first timer",
+        "runOnStart": true
+      }
     }
   },
   "outputs": {
@@ -39,7 +48,7 @@
       "className": "unblankScreen"
     },
     "screen": {
-      "className": "#cursesOutput",
+      "className": "cursesOutput",
       "settings": {
         "#width,height": "8x22 with Terminus 28x14",
         "areas": {
@@ -72,12 +81,13 @@
           }
         }
       }
-     }
+    }
   },
   "actions": [
     {
       "inputName": "qlab",
-      "oscExpr": "/reply/cue_id/*/displayName",
+      "oscExpr": "*",
+      "#oscExpr": "/reply/cue_id/*/displayName",
       "output": {
         "outputName": "screen",
         "comment": "blah"
@@ -123,6 +133,23 @@
       "description": "Timer which keeps the screen alive",
       "output": {
         "outputName": "unblankScreen"
+      }
+    },
+    {
+      "inputName": "qlabKeepAliveTimer",
+      "description": "Timer which sends a heartbeat to qlab",
+      "output": {
+        "outputName": "qlab-macmini",
+        "message": "/thump"
+      }
+    },
+    {
+      "inputName": "qlabKeepAliveTimer",
+      "description": "Timer which ensures we receive workspace updates",
+      "output": {
+        "outputName": "qlab-macmini",
+        "message": "/update",
+        "value": 1
       }
     }
   ],

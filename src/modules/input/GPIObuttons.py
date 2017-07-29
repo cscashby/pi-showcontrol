@@ -22,10 +22,7 @@ class GPIObuttons(_InputModule):
         prev_input[pin] = 0
         ip = GPIO.input(pin)
         if ((not prev_input[pin]) and not ip):
-          if "outputName" in action["output"].keys():
-            self.parent.outputThreads()[action["output"]['outputName']].performAction(action["output"]['message'])
-          else:
-            self.logger.warn("Action has no output: {}".format(action))
+          self.triggerOutput(action)
           prev_input[pin] = ip       
           time.sleep(self.myConfig["settings"]["debounceTime"])
       time.sleep(self.myConfig["settings"]["repeatTime"])

@@ -11,5 +11,5 @@ class _OutputModule(_Module):
     }
     #self.logger.debug("Output module {} settings:\n{}".format(self.name, self.myConfig))
 
-  def performAction(self, **kwargs):
-    raise NotImplementedError("performAction not implemented in {} called with {}".format(self._className, kwargs))
+  def performAction(self, args = {}):
+    raise NotImplementedError("performAction not implemented in {} called with {}".format(self._className, args))

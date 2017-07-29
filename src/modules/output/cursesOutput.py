@@ -1,6 +1,7 @@
 from modules.output._OutputModule import _OutputModule
 import curses
 import logging
+import time
     
 class cursesOutput(_OutputModule):
   def __init__(self, parent, name):
@@ -38,9 +39,10 @@ class cursesOutput(_OutputModule):
 
     while self.running:
       stdscr.getkey()
+      time.sleep(0.001)
 
     curses.endwin()
 
-  def performAction(self, **kwargs):
-    self.logger.debug("performAction called with args {}".format(kwargs))
+  def performAction(self, args):
+    self.logger.debug("performAction called with args {}".format(args))
   

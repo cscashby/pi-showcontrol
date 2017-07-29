@@ -12,3 +12,8 @@ class _InputModule(_Module):
     }
     # print("Input module {} settings:\n{}\n- actions:\n{}".format(self.name, self.myConfig["settings"], self.myConfig["actions"]))
     
+  def triggerOutput(self, action):
+    if "outputName" in action["output"].keys():
+      self.parent.outputThreads()[action["output"]['outputName']].performAction(action["output"]) 
+    else:
+      self.logger.warn("Action has no output: {}".format(action))

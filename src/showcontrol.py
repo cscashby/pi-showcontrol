@@ -60,9 +60,11 @@ class showcontrol():
       else:
         self.logger.warn("Input could not be loaded, not running thread {}".format(d["className"]))
     # We start all the threads after we have completed initialisation as they will depend on each other
-    for instance in self.__inputThreads.values():
+    for name,instance in self.__inputThreads.items():
+      self.logger.debug("Starting input {}".format(name))
       instance.start()
-    for instance in self.__outputThreads.values():
+    for name,instance in self.__outputThreads.items():
+      self.logger.debug("Starting output {}".format(name))
       instance.start()
         
   def outputThreads(self):
