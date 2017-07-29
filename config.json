@@ -148,7 +148,7 @@
       "description": "Timer which ensures we receive workspace updates",
       "output": {
         "outputName": "qlab-macmini",
-        "message": "/update",
+        "message": "/updates",
         "value": 1
       }
     }

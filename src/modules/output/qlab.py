@@ -2,4 +2,6 @@ from modules.output.OSC import OSC
 import logging
 
 class qlab(OSC):
-  pass
+  def __init__(self, parent, name):
+    OSC.__init__(self, parent, name)
+    self.logger = logging.getLogger()
