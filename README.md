@@ -24,6 +24,7 @@ NOTE: Most, if not all of these should be handled by ansible playbook now.
 * python-osc `sudo pip3 install python-osc`
 * GPIO support for RPi `sudo pip3 install RPi.GPIO`
 * Python SMBus `sudo apt-get install python-smbus`
+* Blessings `sudo apt-get install python-blessings`
 
 ## Acknowledgements
 * python-osc https://pypi.python.org/pypi/python-osc
