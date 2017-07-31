@@ -13,17 +13,12 @@ class timer(_InputModule):
     self.logger.debug("timer module started")
     
     if self.myConfig["settings"]["runOnStart"]:
-      self.performAction()
+      self.triggerOutput("triggered")
     
     while self.running:
       if self.running and (time.time() - self.startTime) > self.duration:
-        self.performAction()
+        self.triggerOutput("triggered")
         self.startTime = time.time()
       time.sleep(0.001)
     
     self.logger.debug("Timer exiting")
-
-  def performAction(self):
-    for action in self.myConfig["actions"]:
-      self.triggerOutput(action)
-  

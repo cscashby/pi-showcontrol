@@ -5,6 +5,14 @@ from pythonosc import dispatcher
 from pythonosc import osc_server
 import json
 
+# qlab module both deals with input from qlab's response mechanism (it is an OSC server)
+# and also keeps track of workspace current state.
+#
+# It has a number of different 'output' options - the default is just an
+# OSC server which calls an action and sends on the OSC response
+#
+# The others relate to workspace state - current playback position, etc.
+
 class qlab(_InputModule):
   def __init__(self, parent, name):
     _InputModule.__init__(self, parent, name)
@@ -31,7 +39,7 @@ class qlab(_InputModule):
     self.logger.debug("Stopping server")
     server.shutdown()
 
-  def receiveOSCMessage(self, s, args, data):
+  def receiveOSCMessage(self, s, args, data = ""):
     action = args[0]
     action["output"].update({"OSC": {"message": s}})
     if args == "":
@@ -44,3 +52,9 @@ class qlab(_InputModule):
       self.logger.debug("non-JSON OSC message {} received: {}".format(s, data))
       action["output"].update({"OSC": {"args": args}})
     self.triggerOutput(action)
+
+
+#TODO: Custom activity for receipt of:
+# "/update/workspace/*/cueList/*/playbackPosition"
+# "/cue/selected/displayName"
+# "/reply/cue_id/*/displayName"

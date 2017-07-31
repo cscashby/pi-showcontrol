@@ -84,50 +84,37 @@
     },
     {
       "inputName": "GPIObuttons",
-      "GPIO": 18,
-      "description": "Go",
-      "output": {
+      "GPIO-18": {
+        "description": "Go",
         "outputName": "qlab-macmini",
         "message": "/go"
-      }
-    },
-    {
-      "inputName": "GPIObuttons",
-      "GPIO": 27,
-      "description": "Panic",
-      "output": {
+      },
+      "GPIO-27": {
+        "description": "Panic",
         "outputName": "qlab-macmini",
         "message": "/panic"
-      }
-    },
-    {
-      "inputName": "GPIObuttons",
-      "GPIO": 22,
-      "description": "Pause",
-      "output": {
+      },
+      "GPIO-22": {
+        "description": "Pause",
         "outputName": "qlab-macmini",
         "message": "/pause"
-      }
-    },
-    {
-      "inputName": "GPIObuttons",
-      "GPIO": 23,
-      "description": "Power",
-      "output": {
+      },
+      "GPIO-23": {
+        "description": "Power",
         "comment": "power"
       }
     },
     {
       "inputName": "screenKeepAliveTimer",
       "description": "Timer which keeps the screen alive",
-      "output": {
+      "triggered": {
         "outputName": "unblankScreen"
       }
     },
     {
       "inputName": "qlabKeepAliveTimer",
       "description": "Timer which sends a heartbeat to qlab",
-      "output": {
+      "triggered": {
         "outputName": "qlab-macmini",
         "message": "/thump"
       }
@@ -135,7 +122,7 @@
     {
       "inputName": "qlabKeepAliveTimer",
       "description": "Timer which ensures we receive workspace updates",
-      "output": {
+      "triggered": {
         "outputName": "qlab-macmini",
         "message": "/updates",
         "value": 1
