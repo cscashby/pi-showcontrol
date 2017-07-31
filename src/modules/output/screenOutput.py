@@ -1,4 +1,5 @@
 from modules.output._OutputModule import _OutputModule
+from config import config
 import logging
 import time
 from blessings import Terminal
@@ -7,6 +8,7 @@ class screenOutput(_OutputModule):
   def __init__(self, parent, name):
     _OutputModule.__init__(self, parent, name)
     self.logger = logging.getLogger()
+    self.timerSet = False
 #     with open(self.myConfig["tty"], 'rb') as inf, open (self.myConfig["tty"], 'wb') as outf:
 #       os.dup2(inf.fileno(), 0)
 #       os.dup2(outf.fileno(), 1)
@@ -24,17 +26,23 @@ class screenOutput(_OutputModule):
     with self.terminal.location():
       for areaName, area in self.myConfig["settings"]["areas"].items():
         self.logger.debug("{} {}".format(areaName, area))
+        s = None
         if "staticText" in area.keys():
           s = area["staticText"][:self.terminal.width-1]
-          print(self.terminal.move(area["y"], area["x"]) + s)
-    
+        elif "specialText" in area.keys():
+          s = config()[area["specialText"]][:self.terminal.width-1]
+        self.__updateArea(s, area)
+          
     while self.running:
+      if self.timerSet and time.time() > self.timerTarget:
+        self.timerFunction(self.timerText, self.timerArea)
+        self.timerSet = False
       time.sleep(0.001)
 
     print(self.terminal.exit_fullscreen())
 
   def performAction(self, args):
-    self.logger.debug("performAction called with args {}".format(args))
+    #self.logger.debug("performAction called with args {}".format(args))
     if "area" in args.keys():
       # We're expected to update a text area with new text
       if args["area"] in self.myConfig["settings"]["areas"]:
@@ -57,16 +65,28 @@ class screenOutput(_OutputModule):
       
   def __updateArea(self, text, area):
     colourFunction = self.__dummyColourFunction
-    if "colourFunction" in area.keys():
-      try:
-        colourFunction = getattr(self.terminal, area["colourFunction"])
-      except Exception:
-        self.logger.warn("Colour function not found: {}", area["colourFunction"])
-    print(self.terminal.move(area["y"], area["x"]) + self.terminal.clear_eol + colourFunction(text))
+    x = area["x"] if "x" in area else 0
+    if text:
+      if "align" in area.keys():
+        if area["align"] in ["center","centre"]:
+          x = int(self.terminal.width / 2 - len(text) / 2) 
+      if "colourFunction" in area.keys():
+        try:
+          colourFunction = getattr(self.terminal, area["colourFunction"])
+        except Exception:
+          self.logger.warn("Colour function not found: {}", area["colourFunction"])
+      print(self.terminal.move(area["y"], x) + self.terminal.clear_eol + colourFunction(text))
+    
+  def __startClearTimer(self, duration, text, area):
+    self.timerTarget = time.time() + duration 
+    self.timerSet = True
+    self.timerText = text
+    self.timerArea = area
+    self.timerFunction = self.__clearTimer
 
-  def __startClearTimer(self, text, area):
-    #FIXME
-    pass
+  def __clearTimer(self, text, area):
+    with self.terminal.location():
+      print(self.terminal.move(area["y"], area["x"]) + self.terminal.clear_eol + text)
 
   def __dummyColourFunction(self, string):
     return string

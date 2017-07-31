@@ -6,6 +6,7 @@ import time
 import logging
 import log
 from config import config
+from config import setShowName
 from modules._Module import _Module
 
 class showcontrol():
@@ -97,6 +98,10 @@ if __name__ == "__main__":
   signal.signal(signal.SIGINT, signal_handler)
   # Finally, we can instantiate the classes. This will kick off threads
   global mainObject
+  if len(sys.argv) > 1:
+    setShowName(sys.argv[1])
+  else:
+    setShowName("Go Button")
   mainObject = showcontrol()
   mainObject.runThreads()
   # Then wait for the world to end

@@ -12,3 +12,6 @@ with open(JSON_FILENAME, encoding="utf-8") as config_file:
 
 def config():
   return __config
+
+def setShowName(name):
+  __config.update({"showName": name})

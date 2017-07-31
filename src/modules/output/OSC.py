@@ -28,5 +28,5 @@ class OSC(_OutputModule):
   def sendOSC(self, OSCstring, OSCvalue = []):
     client = udp_client.SimpleUDPClient(self.ip, self.port)
     client.send_message(OSCstring, OSCvalue)
-    self.logger.info("Sending OSC command {} with value {} to {}".format(OSCstring, OSCvalue, self.ip))
+    #self.logger.info("Sending OSC command {} with value {} to {}".format(OSCstring, OSCvalue, self.ip))
         

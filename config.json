@@ -27,6 +27,15 @@
         "runOnStart": true
       }
     },
+    "qlabHeartbeatTimer": {
+      "className": "timer",
+      "settings": {
+        "#timer": "Time in seconds between each action trigger",
+        "timer": 1,
+        "#runOnStart": "If True, runs when class initialises, otherwise just runs after first timer",
+        "runOnStart": true
+      }
+    },
     "qlabKeepAliveTimer": {
       "className": "timer",
       "settings": {
@@ -57,37 +66,36 @@
       "settings": {
         "areas": {
           "showTitle": {
-            "x": 0,
-            "y": 0
+            "y": 0,
+            "specialText": "showName",
+            "align": "center"
           },
           "currentTitle": {
-            "x": 0,
             "y": 2,
             "staticText": "Current cue"
           },
           "currentCue": {
-            "x": 0,
             "y": 3,
-            "colourFunction": "white_on_red"
+            "colourFunction": "white_on_red",
+            "staticText": "None"
           },
           "nextTitle": {
-            "x": 0,
             "y": 4,
             "staticText": "Next cue"
           },
           "nextCue": {
-            "x": 0,
             "y": 5,
-            "colourFunction": "black_on_green"
+            "colourFunction": "black_on_green",
+            "staticText": "None"
           },
           "toast": {
             "x": 21,
-            "y": 6
+            "y": 0
           }
         },
         "toast": {
           "area": "toast",
-          "duration": 3
+          "duration": 0.25
         }
       }
     }
@@ -95,6 +103,9 @@
   "actions": [
     {
       "inputName": "qlab",
+      "#OSC-*": {
+        "outputName": "debugLog"
+      },
       "OSC-/reply/workspace/*/thump": {
         "description": "Respond to a basic qlab heartbeat",
         "outputName": "screen",
@@ -148,11 +159,27 @@
       }
     },
     {
-      "inputName": "qlabKeepAliveTimer",
+      "inputName": "qlabHeartbeatTimer",
       "description": "Timer which sends a heartbeat to qlab",
       "timer": {
         "outputName": "qlab-macmini",
         "message": "/thump"
+      }
+    },
+    {
+      "inputName": "qlabKeepAliveTimer",
+      "description": "Timer which sends update commands to qlab",
+      "timer": {
+        "outputName": "qlab-macmini",
+        "messageList": [
+          {
+            "message": "/updates",
+            "value": 1
+          },{
+            "message": "/alwaysReply",
+            "value": 1
+          }
+        ]
       }
     }
   ],
@@ -161,15 +188,11 @@
       "outputName": "qlab-macmini",
       "messageList": [
         {
-          "message": "/updates",
-          "value": 1
-        },{
-          "message": "/alwaysReply",
-          "value": 1
-        },{
           "message": "/cue/selected/displayName"
         },{
           "message": "/runningCues"
+        },{
+          "message": "/displayName"
         }
       ]
     }
