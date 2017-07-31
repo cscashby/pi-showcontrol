@@ -21,10 +21,11 @@ It is configurable for different functions, the currently supported / tested and
 For Ansible (on the server):
 * pip install passlib
 NOTE: Most, if not all of these should be handled by ansible playbook now.
+* pip3 and setuptools for python3 `sudo apt-get install python3-pip`
 * python-osc `sudo pip3 install python-osc`
 * GPIO support for RPi `sudo pip3 install RPi.GPIO`
 * Python SMBus `sudo apt-get install python-smbus`
-* Blessings `sudo apt-get install python-blessings`
+* Blessings `sudo python3 libs/blessings/setup.py install`
 
 ## Acknowledgements
 * python-osc https://pypi.python.org/pypi/python-osc
