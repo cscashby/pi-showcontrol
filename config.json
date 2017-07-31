@@ -107,14 +107,14 @@
     {
       "inputName": "screenKeepAliveTimer",
       "description": "Timer which keeps the screen alive",
-      "triggered": {
+      "timer": {
         "outputName": "unblankScreen"
       }
     },
     {
       "inputName": "qlabKeepAliveTimer",
       "description": "Timer which sends a heartbeat to qlab",
-      "triggered": {
+      "timer": {
         "outputName": "qlab-macmini",
         "message": "/thump"
       }
@@ -122,7 +122,7 @@
     {
       "inputName": "qlabKeepAliveTimer",
       "description": "Timer which ensures we receive workspace updates",
-      "triggered": {
+      "timer": {
         "outputName": "qlab-macmini",
         "message": "/updates",
         "value": 1

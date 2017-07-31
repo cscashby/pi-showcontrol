@@ -13,11 +13,11 @@ class timer(_InputModule):
     self.logger.debug("timer module started")
     
     if self.myConfig["settings"]["runOnStart"]:
-      self.triggerOutput("triggered")
+      self.triggerOutput("timer")
     
     while self.running:
       if self.running and (time.time() - self.startTime) > self.duration:
-        self.triggerOutput("triggered")
+        self.triggerOutput("timer")
         self.startTime = time.time()
       time.sleep(0.001)
     
