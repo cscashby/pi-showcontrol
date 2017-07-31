@@ -6,6 +6,7 @@
 <path>/${PROJECT_DIR_NAME}/old_src</path>
 <path>/${PROJECT_DIR_NAME}/src</path>
 <path>/${PROJECT_DIR_NAME}/libs/python-osc</path>
+<path>/${PROJECT_DIR_NAME}/libs/blessings</path>
 </pydev_pathproperty>
 
 </pydev_project>

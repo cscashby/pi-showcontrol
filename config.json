@@ -48,7 +48,7 @@
       "className": "unblankScreen"
     },
     "screen": {
-      "className": "cursesOutput",
+      "className": "screenOutput",
       "settings": {
         "#width,height": "8x22 with Terminus 28x14",
         "areas": {
@@ -67,17 +67,6 @@
             "x": 0,
             "y": 3,
             "align": "right"
-          },
-          "nextTitle": {
-            "x": 0,
-            "y": 4,
-            "align": "left",
-            "staticText": "Next cue"
-          },
-          "nextCue": {
-            "x": 0,
-            "y": 5,
-            "align": "right"
           }
         }
       }
@@ -86,11 +75,11 @@
   "actions": [
     {
       "inputName": "qlab",
-      "oscExpr": "*",
-      "#oscExpr": "/reply/cue_id/*/displayName",
+      "oscExpr": "*/thump",
       "output": {
         "outputName": "screen",
-        "comment": "blah"
+        "comment": "Respond to a basic qlab heartbeat"
+        
       }
     },
     {
