@@ -26,7 +26,10 @@ class qlab(_InputModule):
     # Catch-all for debugging and testing reasons
     #d.map("*", self.debugOSCMessage)
     for action in self.myConfig["actions"]:
-      d.map(action["oscExpr"], self.receiveOSCMessage, action)
+      for actionName in action.keys():
+        if isinstance(action[actionName], dict):
+          self.logger.debug("Registering action for {}".format(actionName))
+          d.map(actionName, self.receiveOSCMessage, actionName)
     self.logger.debug("Starting OSC server on {} port {}".format(ip, port))
     server = osc_server.ThreadingOSCUDPServer((ip, port), d)
     self.server_thread = threading.Thread(target = server.serve_forever)
@@ -40,19 +43,17 @@ class qlab(_InputModule):
     server.shutdown()
 
   def receiveOSCMessage(self, s, args, data = ""):
-    action = args[0]
-    action["output"].update({"OSC": {"message": s}})
-    if args == "":
-      self.logger.debug("empty OSC message {} received".format(s))
-    try:
-      j = json.loads(data)
-      self.logger.debug("JSON OSC message {} received: {}".format(s, j))
-      action["output"].update({"OSC": {"JSON": j}})
-    except ValueError:
-      self.logger.debug("non-JSON OSC message {} received: {}".format(s, data))
-      action["output"].update({"OSC": {"args": args}})
-    self.triggerOutput(action)
-
+    actionName = args[0]
+    for action in self.myConfig["actions"]:
+      action[actionName].update({"OSC": {"message": s}})
+      if data == "":
+        self.logger.info("empty OSC message {} received".format(s))
+      try:
+        j = json.loads(data)
+        action[actionName].update({"OSC": {"JSON": j}})
+      except ValueError:
+        action[actionName].update({"OSC": {"args": data}})
+      self.triggerOutput(actionName)
 
 #TODO: Custom activity for receipt of:
 # "/update/workspace/*/cueList/*/playbackPosition"

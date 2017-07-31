@@ -37,6 +37,10 @@
     }
   },
   "outputs": {
+    "debugLog": {
+      "className": "log",
+      "level": "debug"
+    },
     "qlab-macmini": {
       "className": "qlab",
       "settings": {
@@ -75,11 +79,15 @@
   "actions": [
     {
       "inputName": "qlab",
-      "oscExpr": "*/thump",
-      "output": {
+      "*": {
+        "description": "OSC Log",
+        "outputName": "debugLog"
+      },
+      "*/thump": {
+        "description": "Respond to a basic qlab heartbeat",
         "outputName": "screen",
-        "comment": "Respond to a basic qlab heartbeat"
-        
+        "toast": "♥",
+        "toastDuration": 2
       }
     },
     {
