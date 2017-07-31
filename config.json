@@ -5,7 +5,8 @@
       "settings": {
         "#listenIP": "IP to listen on for OSC responses",
         "listenIP": "0.0.0.0",
-        "port": 53001
+        "port": 53001,
+        "linkedOutput": "qlab-macmini"
       }
     },
     "GPIObuttons": {
@@ -30,7 +31,7 @@
       "className": "timer",
       "settings": {
         "#timer": "Time in seconds between each action trigger",
-        "timer": 30,
+        "timer": 5,
         "#runOnStart": "If True, runs when class initialises, otherwise just runs after first timer",
         "runOnStart": true
       }
@@ -54,24 +55,39 @@
     "screen": {
       "className": "screenOutput",
       "settings": {
-        "#width,height": "8x22 with Terminus 28x14",
         "areas": {
           "showTitle": {
             "x": 0,
-            "y": 0,
-            "align": "centre"
+            "y": 0
           },
           "currentTitle": {
             "x": 0,
             "y": 2,
-            "align": "left",
             "staticText": "Current cue"
           },
           "currentCue": {
             "x": 0,
             "y": 3,
-            "align": "right"
+            "colourFunction": "white_on_red"
+          },
+          "nextTitle": {
+            "x": 0,
+            "y": 4,
+            "staticText": "Next cue"
+          },
+          "nextCue": {
+            "x": 0,
+            "y": 5,
+            "colourFunction": "black_on_green"
+          },
+          "toast": {
+            "x": 21,
+            "y": 6
           }
+        },
+        "toast": {
+          "area": "toast",
+          "duration": 3
         }
       }
     }
@@ -79,15 +95,20 @@
   "actions": [
     {
       "inputName": "qlab",
-      "*": {
-        "description": "OSC Log",
-        "outputName": "debugLog"
-      },
-      "*/thump": {
+      "OSC-/reply/workspace/*/thump": {
         "description": "Respond to a basic qlab heartbeat",
         "outputName": "screen",
-        "toast": "♥",
-        "toastDuration": 2
+        "toast": "♥"
+      },
+      "playheadChanged": {
+        "description": "Update screen with new Cue name",
+        "outputName": "screen",
+        "area": "nextCue" 
+      },
+      "cueChanged": {
+        "description": "Update screen with running Cue name",
+        "outputName": "screen",
+        "area": "currentCue" 
       }
     },
     {
@@ -95,12 +116,19 @@
       "GPIO-18": {
         "description": "Go",
         "outputName": "qlab-macmini",
-        "message": "/go"
+        "messageList": [
+          { "message": "/stop" },
+          { "message": "/runningCues" },
+          { "message": "/go" }
+        ]
       },
       "GPIO-27": {
-        "description": "Panic",
+        "description": "Stop",
         "outputName": "qlab-macmini",
-        "message": "/panic"
+        "messageList": [
+          { "message": "/stop" },
+          { "message": "/runningCues" }
+        ]
       },
       "GPIO-22": {
         "description": "Pause",
@@ -126,17 +154,26 @@
         "outputName": "qlab-macmini",
         "message": "/thump"
       }
-    },
-    {
-      "inputName": "qlabKeepAliveTimer",
-      "description": "Timer which ensures we receive workspace updates",
-      "timer": {
-        "outputName": "qlab-macmini",
-        "message": "/updates",
-        "value": 1
-      }
     }
   ],
+  "startupActions": [
+    {
+      "outputName": "qlab-macmini",
+      "messageList": [
+        {
+          "message": "/updates",
+          "value": 1
+        },{
+          "message": "/alwaysReply",
+          "value": 1
+        },{
+          "message": "/cue/selected/displayName"
+        },{
+          "message": "/runningCues"
+        }
+      ]
+    }
+  ],  
   "logging": {
     "version": 1,
     "disable_existing_loggers": "True",

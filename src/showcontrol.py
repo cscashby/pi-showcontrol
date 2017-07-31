@@ -66,6 +66,8 @@ class showcontrol():
     for name,instance in self.__outputThreads.items():
       self.logger.debug("Starting output {}".format(name))
       instance.start()
+    for action in config()["startupActions"]:
+      self.__outputThreads[action["outputName"]].performAction(action)
         
   def outputThreads(self):
     return self.__outputThreads

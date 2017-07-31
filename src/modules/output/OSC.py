@@ -13,14 +13,20 @@ class OSC(_OutputModule):
     self.port = port
   
   def performAction(self, args):
-    if not "message" in args:
-      self.logger.warn("qlab output triggered with no OSC message: {}".format(args))
-    else:
+    if "message" in args:
       OSCstring = args["message"]
       OSCvalue = args["value"] if "value" in args else []
       self.sendOSC(OSCstring, OSCvalue)
+    elif "messageList" in args and isinstance(args["messageList"], list):
+      for a in args["messageList"]:
+        OSCstring = a["message"]
+        OSCvalue = a["value"] if "value" in a else []
+        self.sendOSC(OSCstring, OSCvalue)
+    else:
+      self.logger.warn("qlab output triggered with no OSC message or messageList: {}".format(args))
 
   def sendOSC(self, OSCstring, OSCvalue = []):
     client = udp_client.SimpleUDPClient(self.ip, self.port)
     client.send_message(OSCstring, OSCvalue)
     self.logger.info("Sending OSC command {} with value {} to {}".format(OSCstring, OSCvalue, self.ip))
+        

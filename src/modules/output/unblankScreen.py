@@ -7,6 +7,6 @@ class unblankScreen(_OutputModule):
     _OutputModule.__init__(self, parent, name)
     self.logger = logging.getLogger()
     
-  def performAction(self, args):
+  def performAction(self, args = {}):
     self.logger.debug("Unblanking screen")
     os.system("sudo sh -c 'setterm -blank poke --term linux < /dev/tty0'")

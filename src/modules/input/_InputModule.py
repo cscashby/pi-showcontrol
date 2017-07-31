@@ -12,11 +12,13 @@ class _InputModule(_Module):
     }
     # print("Input module {} settings:\n{}\n- actions:\n{}".format(self.name, self.myConfig["settings"], self.myConfig["actions"]))
     
-  def triggerOutput(self, actionName):
+  def triggerOutput(self, actionName, args = {}):
     for action in self.myConfig["actions"]:
-      if isinstance(action[actionName], dict):
+      if actionName in action.keys() and isinstance(action[actionName], dict):
         if "outputName" in action[actionName].keys():
-          self.parent.outputThreads()[action[actionName]['outputName']].performAction(action[actionName]) 
+          t = action[actionName]
+          t.update(args)
+          self.parent.outputThreads()[action[actionName]['outputName']].performAction(t) 
         else:
           self.logger.warn("Action has no output: {}".format(actionName))
       else:

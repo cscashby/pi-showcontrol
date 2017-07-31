@@ -35,3 +35,38 @@ class screenOutput(_OutputModule):
 
   def performAction(self, args):
     self.logger.debug("performAction called with args {}".format(args))
+    if "area" in args.keys():
+      # We're expected to update a text area with new text
+      if args["area"] in self.myConfig["settings"]["areas"]:
+        area = self.myConfig["settings"]["areas"][args["area"]]
+        if "text" in args.keys():
+          with self.terminal.location():
+            s = args["text"][:self.terminal.width-1]
+            self.__updateArea(s, area)
+        else:
+            self.logger.warn("Area specified with no text\n{}".format(args))
+      else:
+        self.logger.warn("Area not found\n{}".format(args))
+    elif "toast" in args.keys():
+      area = self.myConfig["settings"]["toast"]["area"]
+      if area in self.myConfig["settings"]["areas"]:
+        self.__updateArea(args["toast"], self.myConfig["settings"]["areas"][area])
+        self.__startClearTimer(self.myConfig["settings"]["toast"]["duration"], "", self.myConfig["settings"]["areas"][area])
+      else:
+        self.logger.warn("Area not found\n{}".format(area))
+      
+  def __updateArea(self, text, area):
+    colourFunction = self.__dummyColourFunction
+    if "colourFunction" in area.keys():
+      try:
+        colourFunction = getattr(self.terminal, area["colourFunction"])
+      except Exception:
+        self.logger.warn("Colour function not found: {}", area["colourFunction"])
+    print(self.terminal.move(area["y"], area["x"]) + self.terminal.clear_eol + colourFunction(text))
+
+  def __startClearTimer(self, text, area):
+    #FIXME
+    pass
+
+  def __dummyColourFunction(self, string):
+    return string
