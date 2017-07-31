@@ -14,3 +14,6 @@
 [submodule "libs/python-osc"]
 	path = libs/python-osc
 	url = https://github.com/attwad/python-osc.git
+[submodule "libs/blessings"]
+	path = libs/blessings
+	url = https://github.com/erikrose/blessings.git
