@@ -7,4 +7,9 @@ class log(_OutputModule):
     self.logger = logging.getLogger()
 
   def performAction(self, args = {}):
+    try:
+      if "thump" in args["OSC"]["JSON"]["data"]:
+        return
+    except KeyError:
+      pass
     self.logger.info("Log: called with {}".format(args))

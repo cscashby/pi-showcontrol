@@ -40,7 +40,7 @@
       "className": "timer",
       "settings": {
         "#timer": "Time in seconds between each action trigger",
-        "timer": 5,
+        "timer": 30,
         "#runOnStart": "If True, runs when class initialises, otherwise just runs after first timer",
         "runOnStart": true
       }
@@ -74,9 +74,15 @@
             "y": 2,
             "staticText": "Current cue"
           },
+          "currentStatus": {
+            "x": 21,
+            "y": 2,
+            "useSymbol": "true"
+          },
           "currentCue": {
             "y": 3,
             "colourFunction": "white_on_red",
+            "align": "right",
             "staticText": "None"
           },
           "nextTitle": {
@@ -86,6 +92,7 @@
           "nextCue": {
             "y": 5,
             "colourFunction": "black_on_green",
+            "align": "right",
             "staticText": "None"
           },
           "toast": {
@@ -96,6 +103,11 @@
         "toast": {
           "area": "toast",
           "duration": 0.25
+        },
+        "symbols": {
+          "play": ">",
+          "pause": "\"",
+          "stop": "O"
         }
       }
     }
@@ -109,17 +121,22 @@
       "OSC-/reply/workspace/*/thump": {
         "description": "Respond to a basic qlab heartbeat",
         "outputName": "screen",
-        "toast": "♥"
+        "toast": "°"
       },
       "playheadChanged": {
-        "description": "Update screen with new Cue name",
+        "description": "Update screen with new cue name",
         "outputName": "screen",
         "area": "nextCue" 
       },
       "cueChanged": {
-        "description": "Update screen with running Cue name",
+        "description": "Update screen with running cue name",
         "outputName": "screen",
         "area": "currentCue" 
+      },
+      "cueStatusChange": {
+        "description": "Update screen with cue status",
+        "outputName": "screen",
+        "area": "currentStatus"
       }
     },
     {
@@ -129,7 +146,7 @@
         "outputName": "qlab-macmini",
         "messageList": [
           { "message": "/stop" },
-          { "message": "/runningCues" },
+          { "message": "/runningOrPausedCues" },
           { "message": "/go" }
         ]
       },
@@ -138,13 +155,16 @@
         "outputName": "qlab-macmini",
         "messageList": [
           { "message": "/stop" },
-          { "message": "/runningCues" }
+          { "message": "/runningOrPausedCues" }
         ]
       },
       "GPIO-22": {
         "description": "Pause",
         "outputName": "qlab-macmini",
-        "message": "/pause"
+        "messageList": [
+          { "message": "/pause" },
+          { "message": "/runningOrPausedCues" }
+         ]
       },
       "GPIO-23": {
         "description": "Power",

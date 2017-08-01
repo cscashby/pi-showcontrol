@@ -18,6 +18,7 @@ class qlab(_InputModule):
   def __init__(self, parent, name):
     _InputModule.__init__(self, parent, name)
     self.logger = logging.getLogger()
+    self.currentCue = {"isRunning": False, "isPaused": False, "isReady": False}
         
   def run(self):
     # Start listening server
@@ -27,7 +28,11 @@ class qlab(_InputModule):
     # Catch workspace updates which tell us we have a new cue position
     d.map("/update/workspace/*/cueList/*/playbackPosition", self.updatePlaybackPosition)
     d.map("/reply/cue_id/*/displayName", self.updateNextCueName)
-    d.map("/reply/workspace/*/runningCues", self.updateCueName)
+    d.map("/reply/workspace/*/runningCues", self.updateCurrentCue)
+    d.map("/reply/workspace/*/runningOrPausedCues", self.updateCurrentCue)
+    d.map("/reply/workspace/*/cueList", self.updateCurrentCue)
+    d.map("/reply/cue_id/*/isPaused", self.updateCurrentCueStatus)
+    d.map("/reply/cue_id/*/isRunning", self.updateCurrentCueStatus)
     for action in self.myConfig["actions"]:
       for actionName in action.keys():
         if isinstance(action[actionName], dict):
@@ -65,17 +70,37 @@ class qlab(_InputModule):
       self.parent.outputThreads()[self.myConfig["settings"]["linkedOutput"]].sendOSC("/cue_id/{}/displayName".format(cueID))
     else:
       self.triggerOutput("playheadChanged", {"text": "None"})
-    self.parent.outputThreads()[self.myConfig["settings"]["linkedOutput"]].sendOSC("/workspace/{}/runningCues".format(workspace))
+    self.parent.outputThreads()[self.myConfig["settings"]["linkedOutput"]].sendOSC("/workspace/{}/runningOrPausedCues".format(workspace))
     
   def updateNextCueName(self, s, data = None):
     if data:
       j = json.loads(data)
       self.triggerOutput("playheadChanged", {"text": j["data"]})
 
-  def updateCueName(self, s, data = None):
+  def updateCurrentCue(self, s, data = None):
     if data:
       j = json.loads(data)
       cueName = "None"
-      if len(j["data"])>1:
+      self.currentCue["isReady"] = False
+      self.triggerOutput("cueStatusChange", {"text": "stop"})
+      if len(j["data"])>0:
         cueName = j["data"][-1]["listName"]
+        cueID = j["data"][-1]["uniqueID"]
+        self.parent.outputThreads()[self.myConfig["settings"]["linkedOutput"]].sendOSC("/cue_id/{}/isPaused".format(cueID))
+        self.parent.outputThreads()[self.myConfig["settings"]["linkedOutput"]].sendOSC("/cue_id/{}/isRunning".format(cueID))
       self.triggerOutput("cueChanged", {"text": cueName})
+        
+  def updateCurrentCueStatus(self, s, data = None):
+    status = "stop"
+    if data:
+      j = json.loads(data)
+      if re.findall("isPaused", j["address"], re.I):
+        self.currentCue["isPaused"] = j["data"]
+      elif re.findall("isRunning", j["address"], re.I):
+        self.currentCue["isRunning"] = j["data"]
+    
+    if self.currentCue["isPaused"]:
+      status = "pause"
+    elif self.currentCue["isRunning"]:
+      status = "play"
+    self.triggerOutput("cueStatusChange", {"text": status})

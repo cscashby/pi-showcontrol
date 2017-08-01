@@ -9,23 +9,17 @@ class screenOutput(_OutputModule):
     _OutputModule.__init__(self, parent, name)
     self.logger = logging.getLogger()
     self.timerSet = False
-#     with open(self.myConfig["tty"], 'rb') as inf, open (self.myConfig["tty"], 'wb') as outf:
-#       os.dup2(inf.fileno(), 0)
-#       os.dup2(outf.fileno(), 1)
-#       os.dup2(outf.fileno(), 2)
-#     os.environ["TERM"] = "linux"
     self.windows = {}
-    
-  def run(self):
     self.logger.debug("Initialising Blessings")
     self.terminal = Terminal()
+    
+  def run(self):
     print(self.terminal.enter_fullscreen() + self.terminal.clear())
     
     # Iterate through config and print any staticText entries
     # In config-speak we're using 'area' to mean a curses 'window' as we'll never need a scrolling area
     with self.terminal.location():
       for areaName, area in self.myConfig["settings"]["areas"].items():
-        self.logger.debug("{} {}".format(areaName, area))
         s = None
         if "staticText" in area.keys():
           s = area["staticText"][:self.terminal.width-1]
@@ -49,8 +43,7 @@ class screenOutput(_OutputModule):
         area = self.myConfig["settings"]["areas"][args["area"]]
         if "text" in args.keys():
           with self.terminal.location():
-            s = args["text"][:self.terminal.width-1]
-            self.__updateArea(s, area)
+            self.__updateArea(args["text"], area)
         else:
             self.logger.warn("Area specified with no text\n{}".format(args))
       else:
@@ -66,10 +59,16 @@ class screenOutput(_OutputModule):
   def __updateArea(self, text, area):
     colourFunction = self.__dummyColourFunction
     x = area["x"] if "x" in area else 0
+    if "useSymbol" in area.keys():
+      text = self.myConfig["settings"]["symbols"][text] if text in self.myConfig["settings"]["symbols"] else "?"
     if text:
       if "align" in area.keys():
         if area["align"] in ["center","centre"]:
-          x = int(self.terminal.width / 2 - len(text) / 2) 
+          text = text.center(self.terminal.width)[:self.terminal.width]
+        elif area["align"] == "right":
+          text = text.rjust(self.terminal.width)[:self.terminal.width]
+        else:
+          text = text.ljust(self.terminal.width)[:self.terminal.width]
       if "colourFunction" in area.keys():
         try:
           colourFunction = getattr(self.terminal, area["colourFunction"])
