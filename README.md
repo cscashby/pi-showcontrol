@@ -10,6 +10,8 @@ It looks something like this:
 
 ![Box Design image](https://github.com/cscashby/pi-showcontrol/raw/6427e44d50968b0135206b570e9a3a4cb71eeb63/docs/box/Box%20Design.png)
 
+NOTE this image is a slightly out-of-date one showing a 2-line character display. I've since updated the code and the box prototype to use the small [PiTFT](https://shop.pimoroni.com/products/pitft-plus-480x320-3-5-tft-touchscreen-for-raspberry-pi-pi-2-and-model-a-b?utm_medium=cpc&utm_source=googlepla&variant=4080023745&gclid=Cj0KCQjwlf_MBRDUARIsAD8Gj8CAQk7UuQAONYFBYBVz59S03C8nTJtzcMYPNM9e_ndSreCQs6M_mVsaAsJDEALw_wcB) display which is much more functional - I'll update this design image when I design a 'real' box.
+
 It will spit out [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control) or MIDI commands
 and display useful stuff on the small display.
 
