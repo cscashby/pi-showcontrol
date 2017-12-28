@@ -21,6 +21,9 @@ It is configurable for different functions, the currently supported / tested and
 
 ## Prerequisites
 For Ansible (on the server):
+
+NOTE Ansible code is not yet updated - more work is required (as the box documentation) to work with the pitft screen.
+
 * pip install passlib
 NOTE: Most, if not all of these should be handled by ansible playbook now.
 * pip3 and setuptools for python3 `sudo apt-get install python3-pip`
